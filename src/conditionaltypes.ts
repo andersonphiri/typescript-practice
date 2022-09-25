@@ -59,8 +59,24 @@ interface Dog {
 }
 
 type EmailMessageContents = MessageOf<Email>;
-type DogMessageContents = 
+type DogMessageContents = MessageOf2<Dog>; 
 
+// flatterns: extract the type from array if TType is array else just return that type
+type Flatten<TType> = TType extends any[] 
+? TType[number] // using indexed access type
+: TType;
+
+type StringsFlattened = Flatten<string[]>;
+type FlattenedString = Flatten<string> ;
+
+// or, use the infer keyword
+type Flattened<TType> = TType extends Array<infer Item> ? Item : TType;
+
+type NumbersFlattened = Flattened<number[]>; // number
+
+// cont'd infer type returned by func
+// https://www.typescriptlang.org/docs/handbook/2/conditional-types.html
+type GetReturntype<TType> = TType extends (...args : never[]) => infer Return ? Return : never;
 
 
 
