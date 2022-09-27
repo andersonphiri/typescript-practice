@@ -75,8 +75,37 @@ type Flattened<TType> = TType extends Array<infer Item> ? Item : TType;
 type NumbersFlattened = Flattened<number[]>; // number
 
 // cont'd infer type returned by func
-// https://www.typescriptlang.org/docs/handbook/2/conditional-types.html
-type GetReturntype<TType> = TType extends (...args : never[]) => infer Return ? Return : never;
+// 
+type GetReturnType<TType> = TType extends (...args: never[]) => infer Return ? Return : never;
+
+type Num = GetReturnType<() => number>; // number
+type StringRT = GetReturnType<(x: string) => string>;
+function lol() {
+    return "laugh";
+}
+type StringRT2 = GetReturnType<() => string>;
 
 
+type Bools = GetReturnType<(a: number, b: number) => boolean[]>;
 
+// for overloaded function, the resolved type will be the last signature, which is presumably the most (catch-all case)
+declare function stringOrNum(x: string): number;
+declare function stringOrNum(x: number): string;
+declare function stringOrNum(x: string | number): number | string;
+
+// then to get the typeof return, we say
+type StrOrNum = ReturnType<typeof stringOrNum>;
+
+// distributive conditional types
+// consider to array type
+type ToArray<TType> = TType extends any ? TType[] : never;
+// applying toarry type to a union, it will be distributed to each member of the union
+type StrOrNumToArray = ToArray<string | number>; // becomes string[] | number[]
+
+// the behaviour of distributive is ok but what if you want only one toArray type of a union ?
+// then use [] around ToArray
+type ToArrayNonDistributed<TType> = [TType] extends [any] ? TType[] : never;
+
+type StrOrNumToArrayNonDistributed = ToArrayNonDistributed<string | number> // will become (string  number)[]
+
+let b: StrOrNumToArrayNonDistributed = [20];
