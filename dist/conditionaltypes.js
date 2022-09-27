@@ -14,3 +14,7 @@ function createLabelUni(idOrName) {
 }
 var b__0 = createLabelUni("anderson");
 var b__1 = createLabelUni(45.678);
+function lol() {
+    return "laugh";
+}
+var b = [20];
